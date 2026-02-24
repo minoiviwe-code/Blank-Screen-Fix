@@ -1,0 +1,8 @@
+{
+  "name": "Ubuntu Pools - Production Implementation",
+  "description": "Enterprise-grade community prosperity platform with non-custodial hard gates, immutable event logs, and FIC-compliant scaffolding.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
