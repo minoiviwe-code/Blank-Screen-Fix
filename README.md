@@ -62,3 +62,4 @@ Ensure you have a `.env` file with `GEMINI_API_KEY`, `VITE_SUPABASE_URL`, and `V
 **Governed Pilot Platform — No Custody — No Real Funds**
 
 Until the Board authorizes later phases, Ubuntu Pools must be deployed and represented only as a non-custodial pilot coordination and governance system.
+# season-three-how-i-met-your-mother
