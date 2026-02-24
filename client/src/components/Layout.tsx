@@ -61,8 +61,9 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
                     ? 'bg-primary/10 text-primary font-semibold shadow-sm' 
                     : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                 }`}
+                data-testid={`link-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
               >
-                <item.icon className={`w-5 h-5 ${isActive ? 'text-primary' : ''}`} />
+                <item.icon className={`w-5 h-5 ${isActive ? 'text-primary' : ''}`} aria-hidden="true" />
                 {item.label}
               </Link>
             );
@@ -87,13 +88,14 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
               {user.username.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 overflow-hidden">
-              <p className="text-sm font-semibold truncate">{user.username}</p>
+              <p className="text-sm font-semibold truncate" data-testid="text-user-name">{user.username}</p>
               <p className="text-xs text-primary font-medium">Score: {user.ubuntuScore}</p>
             </div>
             <button 
               onClick={() => logout.mutate()} 
               className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
               title="Logout"
+              data-testid="button-logout"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -107,7 +109,7 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
           <Globe2 className="w-6 h-6 text-primary" />
           <span className="font-display font-bold text-lg">Ubuntu Pools</span>
         </Link>
-        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2">
+        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2" aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}>
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
@@ -132,6 +134,7 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
             <button 
               onClick={() => { logout.mutate(); setMobileMenuOpen(false); }}
               className="flex items-center gap-4 p-4 rounded-xl text-destructive font-medium mt-4"
+              data-testid="button-logout-mobile"
             >
               <LogOut className="w-6 h-6" />
               Logout

@@ -33,38 +33,38 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6 bg-gradient-to-br from-primary to-orange-500 text-white border-none relative overflow-hidden">
+        <Card data-testid="card-ubuntu-score" className="p-6 bg-gradient-to-br from-primary to-orange-500 text-white border-none relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10" />
           <div className="flex items-center justify-between mb-4 relative z-10">
             <h3 className="font-semibold text-white/80">Ubuntu Score</h3>
-            <ShieldCheck className="w-6 h-6 text-white/80" />
+            <ShieldCheck className="w-6 h-6 text-white/80" aria-hidden="true" />
           </div>
           <div className="relative z-10">
-            <p className="text-5xl font-display font-bold">{user.ubuntuScore}</p>
+            <p className="text-5xl font-display font-bold" data-testid="text-score-value">{user.ubuntuScore}</p>
             <p className="text-sm text-white/80 mt-2 font-medium">Trust Reputation Status: <span className="text-white">Excellent</span></p>
           </div>
         </Card>
 
-        <Card className="p-6 relative overflow-hidden group">
+        <Card data-testid="card-active-pools" className="p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150" />
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-muted-foreground">Active Pools</h3>
-            <Users className="w-6 h-6 text-secondary" />
+            <Users className="w-6 h-6 text-secondary" aria-hidden="true" />
           </div>
           <div>
-            <p className="text-4xl font-display font-bold text-foreground">{activePools}</p>
+            <p className="text-4xl font-display font-bold text-foreground" data-testid="text-active-pools-count">{activePools}</p>
             <p className="text-sm text-muted-foreground mt-2 font-medium">Community Stokvels joined</p>
           </div>
         </Card>
 
-        <Card className="p-6 relative overflow-hidden group">
+        <Card data-testid="card-network-status" className="p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150" />
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-muted-foreground">Network Status</h3>
-            <TrendingUp className="w-6 h-6 text-primary" />
+            <TrendingUp className="w-6 h-6 text-primary" aria-hidden="true" />
           </div>
           <div>
-            <p className="text-4xl font-display font-bold text-foreground">Active</p>
+            <p className="text-4xl font-display font-bold text-foreground" data-testid="status-network-active">Active</p>
             <p className="text-sm text-muted-foreground mt-2 font-medium">All governance checks passed</p>
           </div>
         </Card>

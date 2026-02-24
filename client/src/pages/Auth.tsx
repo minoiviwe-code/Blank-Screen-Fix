@@ -45,15 +45,15 @@ const Auth: React.FC = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div className="flex items-center gap-3 mb-8">
               <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
-                <Globe2 className="w-6 h-6 text-white" />
+                <Globe2 className="w-6 h-6 text-white" aria-hidden="true" />
               </div>
-              <h1 className="font-display font-bold text-3xl">Ubuntu Pools</h1>
+              <h1 className="font-display font-bold text-3xl" data-testid="text-auth-title">Ubuntu Pools</h1>
             </div>
             
             <h2 className="text-3xl font-display font-bold mb-2">
               {isLogin ? 'Welcome back' : 'Join the Community'}
             </h2>
-            <p className="text-muted-foreground mb-8">
+            <p className="text-muted-foreground mb-8" data-testid="text-auth-description">
               {isLogin ? 'Log in to manage your Stokvels and track your prosperity.' : 'Create an account to participate in trusted community savings.'}
             </p>
 
@@ -67,6 +67,7 @@ const Auth: React.FC = () => {
                   value={username} 
                   onChange={(e) => setUsername(e.target.value)} 
                   placeholder="e.g. mandela123"
+                  data-testid="input-username"
                 />
               </div>
               <div>
@@ -78,16 +79,17 @@ const Auth: React.FC = () => {
                   value={password} 
                   onChange={(e) => setPassword(e.target.value)} 
                   placeholder="••••••••"
+                  data-testid="input-password"
                 />
               </div>
 
               {error && (
-                <div className="p-3 rounded-xl bg-destructive/10 text-destructive text-sm font-semibold border border-destructive/20">
+                <div className="p-3 rounded-xl bg-destructive/10 text-destructive text-sm font-semibold border border-destructive/20" data-testid="text-auth-error">
                   {error.message}
                 </div>
               )}
 
-              <Button type="submit" className="w-full" size="lg" isLoading={isPending}>
+              <Button type="submit" className="w-full" size="lg" isLoading={isPending} data-testid="button-auth-submit">
                 {isLogin ? 'Sign In' : 'Create Account'}
               </Button>
             </form>
@@ -97,6 +99,7 @@ const Auth: React.FC = () => {
                 type="button" 
                 onClick={() => setIsLogin(!isLogin)}
                 className="text-primary font-semibold hover:underline decoration-2 underline-offset-4 transition-all"
+                data-testid="button-toggle-auth"
               >
                 {isLogin ? "Don't have an account? Sign up" : "Already have an account? Log in"}
               </button>

@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://e0559ab6-dff1-49c5-b135-8ca576e2ffb9-00-32dd33iuq5gf6.janeway.replit.dev/sitemap.xml
