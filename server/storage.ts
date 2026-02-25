@@ -1,20 +1,34 @@
-import { users, pools, contributions, type InsertUser, type InsertPool, type InsertContribution } from "@shared/schema";
+import { users, pools, contributions, type InsertUser, type InsertPoolWithCreator, type InsertContribution } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
+import bcrypt from "bcryptjs";
 
+const SALT_ROUNDS = 12;
 const PostgresSessionStore = connectPg(session);
 
 export function setupSession(app: any) {
+  const sessionSecret = process.env.SESSION_SECRET;
+  if (!sessionSecret) {
+    throw new Error("SESSION_SECRET environment variable is required");
+  }
+  
+  const isProduction = process.env.NODE_ENV === "production";
+  
   app.use(
     session({
       store: new PostgresSessionStore({ pool, createTableIfMissing: true }),
-      secret: process.env.SESSION_SECRET || "ubuntu_pools_secret",
+      secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
+      cookie: { 
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: "strict",
+      },
     })
   );
 }
@@ -23,10 +37,11 @@ export interface IStorage {
   getUser(id: number): Promise<typeof users.$inferSelect | undefined>;
   getUserByUsername(username: string): Promise<typeof users.$inferSelect | undefined>;
   createUser(user: InsertUser): Promise<typeof users.$inferSelect>;
+  verifyPassword(password: string, hash: string): Promise<boolean>;
   
   getPools(): Promise<typeof pools.$inferSelect[]>;
   getPool(id: number): Promise<typeof pools.$inferSelect | undefined>;
-  createPool(pool: InsertPool): Promise<typeof pools.$inferSelect>;
+  createPool(pool: InsertPoolWithCreator): Promise<typeof pools.$inferSelect>;
   
   getContributions(poolId: number): Promise<typeof contributions.$inferSelect[]>;
   createContribution(contribution: InsertContribution): Promise<typeof contributions.$inferSelect>;
@@ -44,8 +59,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createUser(insertUser: InsertUser) {
-    const [user] = await db.insert(users).values(insertUser).returning();
+    const hashedPassword = await bcrypt.hash(insertUser.password, SALT_ROUNDS);
+    const [user] = await db.insert(users).values({ ...insertUser, password: hashedPassword }).returning();
     return user;
+  }
+
+  async verifyPassword(password: string, hash: string): Promise<boolean> {
+    return bcrypt.compare(password, hash);
   }
 
   async getPools() {
@@ -57,7 +77,7 @@ export class DatabaseStorage implements IStorage {
     return pool;
   }
 
-  async createPool(insertPool: InsertPool) {
+  async createPool(insertPool: InsertPoolWithCreator) {
     const [pool] = await db.insert(pools).values(insertPool).returning();
     return pool;
   }

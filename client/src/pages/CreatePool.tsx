@@ -31,8 +31,18 @@ const CreatePool: React.FC = () => {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto py-8">
       <div className="mb-8">
-        <h1 className="text-4xl font-display font-bold">Create a Pool</h1>
-        <p className="text-muted-foreground mt-2">Initialize a new community stokvel. Ensure you have consensus from your peers.</p>
+        <div className="h-48 rounded-2xl overflow-hidden mb-6 relative">
+          <img 
+            src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200" 
+            alt="Community collaboration"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary/90 to-transparent" />
+          <div className="absolute bottom-6 left-6 right-6">
+            <h1 className="text-4xl font-display font-bold text-white">Create a Pool</h1>
+            <p className="text-white/80 mt-2">Initialize a new community stokvel. Ensure you have consensus from your peers.</p>
+          </div>
+        </div>
       </div>
 
       <Card className="p-8">

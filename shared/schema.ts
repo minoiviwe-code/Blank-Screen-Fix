@@ -34,6 +34,9 @@ export const contributions = pgTable("contributions", {
 // === BASE SCHEMAS ===
 export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true, isKycVerified: true, ubuntuScore: true });
 export const insertPoolSchema = createInsertSchema(pools).omit({ id: true, createdAt: true, creatorId: true });
+export const insertPoolWithCreatorSchema = insertPoolSchema.extend({
+  creatorId: z.number().int().positive(),
+});
 export const insertContributionSchema = createInsertSchema(contributions).omit({ id: true, createdAt: true, status: true });
 
 // === EXPLICIT API CONTRACT TYPES ===
@@ -42,6 +45,7 @@ export type InsertUser = z.infer<typeof insertUserSchema>;
 
 export type Pool = typeof pools.$inferSelect;
 export type InsertPool = z.infer<typeof insertPoolSchema>;
+export type InsertPoolWithCreator = z.infer<typeof insertPoolWithCreatorSchema>;
 
 export type Contribution = typeof contributions.$inferSelect;
 export type InsertContribution = z.infer<typeof insertContributionSchema>;

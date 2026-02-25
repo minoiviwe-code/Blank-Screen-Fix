@@ -1,6 +1,85 @@
 
 import { Pool, PoolType, PoolStatus, MemberTier, User } from './types';
 
+export const POOL_TYPE_IMAGES: Record<string, { url: string; alt: string }> = {
+  [PoolType.STOKVEL]: {
+    url: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800',
+    alt: 'Community gathering representing traditional Stokvel'
+  },
+  [PoolType.FAMILY_RESERVE]: {
+    url: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=800',
+    alt: 'Family togetherness and legacy'
+  },
+  [PoolType.SME_WHOLESALE]: {
+    url: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800',
+    alt: 'Small business collaboration'
+  },
+  [PoolType.CROWD_ASSET]: {
+    url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800',
+    alt: 'Shared community infrastructure'
+  },
+  [PoolType.ROTATING]: {
+    url: 'https://images.unsplash.com/photo-1531206715517-5c0ba140840e?auto=format&fit=crop&q=80&w=800',
+    alt: 'Rotating savings circle'
+  },
+  [PoolType.DAILY]: {
+    url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800',
+    alt: 'Daily savings community'
+  },
+  [PoolType.WEEKLY]: {
+    url: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800',
+    alt: 'Weekly contribution group'
+  },
+  [PoolType.FORTNIGHT]: {
+    url: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=800',
+    alt: 'Bi-weekly savings meeting'
+  },
+  [PoolType.MONTHLY]: {
+    url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800',
+    alt: 'Monthly financial planning'
+  },
+  [PoolType.SAVINGS]: {
+    url: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=800',
+    alt: 'Collective savings'
+  },
+  [PoolType.INVESTMENT]: {
+    url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800',
+    alt: 'Joint investment pool'
+  },
+};
+
+export const getPoolImage = (poolId: string): { url: string; alt: string } => {
+  const images = [
+    { url: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800', alt: 'Community gathering' },
+    { url: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=800', alt: 'Family togetherness' },
+    { url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800', alt: 'Team collaboration' },
+    { url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800', alt: 'Group unity' },
+    { url: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=800', alt: 'Business meeting' },
+    { url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=800', alt: 'Community celebration' },
+  ];
+  const index = parseInt(poolId.replace(/\D/g, '')) % images.length;
+  return images[index] || images[0];
+};
+
+export const COMMUNITY_IMAGES = {
+  hero: {
+    url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=1200',
+    alt: 'Ubuntu community gathering'
+  },
+  trust: {
+    url: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800',
+    alt: 'Trust and collaboration'
+  },
+  governance: {
+    url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800',
+    alt: 'Community governance'
+  },
+  prosperity: {
+    url: 'https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&q=80&w=800',
+    alt: 'Collective prosperity'
+  }
+};
+
 export const COLORS = {
   primary: '#2D302E', 
   accent: '#8CA082', // Sage (Growth/Life)

@@ -2,9 +2,9 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
-
-const app = express();
-const httpServer = createServer(app);
+import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 declare module "http" {
   interface IncomingMessage {
@@ -12,15 +12,63 @@ declare module "http" {
   }
 }
 
-app.use(
-  express.json({
-    verify: (req, _res, buf) => {
-      req.rawBody = buf;
-    },
-  }),
-);
+const app = express();
+const httpServer = createServer(app);
 
-app.use(express.urlencoded({ extended: false }));
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true,
+  },
+}));
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(",")
+  : ["http://localhost:5000", "http://localhost:3000"];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { message: "Too many attempts, please try again later" },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { message: "Too many requests, please try again later" },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use("/api/auth", authLimiter);
+app.use("/api", apiLimiter);
+
+app.use(express.json({ 
+  verify: (req, _res, buf) => {
+    req.rawBody = buf;
+  },
+  limit: "10kb",
+}));
+
+app.use(express.urlencoded({ extended: false, limit: "10kb" }));
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {

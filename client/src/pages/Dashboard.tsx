@@ -1,17 +1,16 @@
 import React from 'react';
 import { useUser } from '@/hooks/use-auth';
 import { usePools } from '@/hooks/use-pools';
-import { useCurrency } from '@/contexts/CurrencyContext';
 import { formatCurrency } from '@/lib/utils';
 import { Card, Badge } from '@/components/PremiumUI';
 import { Link, useLocation } from 'wouter';
 import { motion } from 'framer-motion';
 import { ShieldCheck, TrendingUp, Users, ArrowRight } from 'lucide-react';
+import { getPoolImage } from '@/constants';
 
 const Dashboard: React.FC = () => {
   const { data: user, isLoading: userLoading } = useUser();
   const { data: pools, isLoading: poolsLoading } = usePools();
-  const { currency } = useCurrency();
   const [, setLocation] = useLocation();
 
   if (userLoading || poolsLoading) {
@@ -33,8 +32,8 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card data-testid="card-ubuntu-score" className="p-6 bg-gradient-to-br from-primary to-orange-500 text-white border-none relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10" />
+        <Card data-testid="card-ubuntu-score" className="p-6 bg-primary text-white border-primary relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10" />
           <div className="flex items-center justify-between mb-4 relative z-10">
             <h3 className="font-semibold text-white/80">Ubuntu Score</h3>
             <ShieldCheck className="w-6 h-6 text-white/80" aria-hidden="true" />
@@ -45,8 +44,8 @@ const Dashboard: React.FC = () => {
           </div>
         </Card>
 
-        <Card data-testid="card-active-pools" className="p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150" />
+        <Card data-testid="card-active-pools" className="p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full -mr-10 -mt-10" />
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-muted-foreground">Active Pools</h3>
             <Users className="w-6 h-6 text-secondary" aria-hidden="true" />
@@ -57,8 +56,8 @@ const Dashboard: React.FC = () => {
           </div>
         </Card>
 
-        <Card data-testid="card-network-status" className="p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150" />
+        <Card data-testid="card-network-status" className="p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -mr-10 -mt-10" />
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-muted-foreground">Network Status</h3>
             <TrendingUp className="w-6 h-6 text-primary" aria-hidden="true" />
@@ -83,31 +82,42 @@ const Dashboard: React.FC = () => {
             <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
             <h3 className="text-xl font-bold mb-2">No active pools</h3>
             <p className="text-muted-foreground mb-6">There are currently no stokvels available to join.</p>
-            <Link href="/create-pool" className="inline-flex items-center justify-center h-11 px-6 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+            <Link href="/create-pool" className="inline-flex items-center justify-center h-11 px-6 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-colors">
               Start the first one
             </Link>
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {pools?.map((pool) => (
-              <Card key={pool.id} className="flex flex-col group hover:border-primary/50 cursor-pointer" onClick={() => setLocation(`/pool/${pool.id}`)}>
-                <div className="p-6 flex-1">
-                  <div className="flex justify-between items-start mb-4">
-                    <Badge variant="secondary">{pool.currency}</Badge>
-                    <span className="text-xs font-semibold text-muted-foreground">ID: #{pool.id}</span>
+            {pools?.map((pool) => {
+              const poolImage = getPoolImage(String(pool.id)).url;
+              return (
+                <Card key={pool.id} className="flex flex-col group hover:border-primary/50 cursor-pointer overflow-hidden" onClick={() => setLocation(`/pool/${pool.id}`)}>
+                  <div className="h-40 relative overflow-hidden">
+                    <img 
+                      src={poolImage} 
+                      alt={pool.name}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   </div>
-                  <h3 className="font-display font-bold text-xl mb-2 group-hover:text-primary transition-colors line-clamp-1">{pool.name}</h3>
-                  <p className="text-muted-foreground text-sm line-clamp-2">{pool.description}</p>
-                </div>
-                <div className="p-6 border-t border-border/50 bg-muted/20 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mb-1">Target</p>
-                    <p className="font-bold text-foreground">{formatCurrency(pool.targetAmount, pool.currency)}</p>
+                  <div className="p-6 flex-1">
+                    <div className="flex justify-between items-start mb-3">
+                      <Badge variant="secondary">{pool.currency}</Badge>
+                      <span className="text-xs font-semibold text-muted-foreground">ID: #{pool.id}</span>
+                    </div>
+                    <h3 className="font-display font-bold text-xl mb-2 group-hover:text-primary transition-colors line-clamp-1">{pool.name}</h3>
+                    <p className="text-muted-foreground text-sm line-clamp-2">{pool.description}</p>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-transform group-hover:translate-x-1" />
-                </div>
-              </Card>
-            ))}
+                  <div className="p-6 border-t border-border/50 bg-muted/20 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mb-1">Target</p>
+                      <p className="font-bold text-foreground">{formatCurrency(pool.targetAmount, pool.currency)}</p>
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-transform group-hover:translate-x-1" />
+                  </div>
+                </Card>
+              );
+            })}
           </div>
         )}
       </div>

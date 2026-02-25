@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./client/index.html",
-    "./client/src/**/*.{js,ts,jsx,tsx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -49,10 +49,6 @@ export default {
           DEFAULT: "#F7F7F7",
           foreground: "#6B6B6B",
         },
-        accent: {
-          DEFAULT: "#F7F7F7",
-          foreground: "#1A1A1A",
-        },
         destructive: {
           DEFAULT: "#C62828",
           foreground: "#FFFFFF",
@@ -60,9 +56,6 @@ export default {
         border: "#DADADA",
         input: "#DADADA",
         ring: "#0F3D2E",
-        success: "#2E7D32",
-        warning: "#ED6C02",
-        info: "#0288D1",
       },
       fontFamily: {
         display: ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
@@ -76,4 +69,4 @@ export default {
     },
   },
   plugins: [],
-}
+};

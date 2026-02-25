@@ -1,7 +1,8 @@
 import type { Express } from "express";
-import { createServer, type Server } from "http";
+import type { Server } from "http";
 import { storage, setupSession } from "./storage";
 import { api } from "@shared/routes";
+import type { InsertPoolWithCreator } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(
@@ -22,7 +23,7 @@ export async function registerRoutes(
       res.status(201).json(user);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json({ message: err.errors[0].message });
+        return res.status(400).json({ message: err.issues[0]?.message || "Validation error" });
       }
       res.status(500).json({ message: "Internal server error" });
     }
@@ -32,14 +33,18 @@ export async function registerRoutes(
     try {
       const input = api.auth.login.input.parse(req.body);
       const user = await storage.getUserByUsername(input.username);
-      if (!user || user.password !== input.password) {
+      if (!user) {
+        return res.status(401).json({ message: "Invalid username or password" });
+      }
+      const isValidPassword = await storage.verifyPassword(input.password, user.password);
+      if (!isValidPassword) {
         return res.status(401).json({ message: "Invalid username or password" });
       }
       (req.session as any).userId = user.id;
       res.status(200).json(user);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(401).json({ message: err.errors[0].message });
+        return res.status(401).json({ message: err.issues[0]?.message || "Validation error" });
       }
       res.status(500).json({ message: "Internal server error" });
     }
@@ -63,7 +68,7 @@ export async function registerRoutes(
     res.status(200).json(user);
   });
 
-  app.get(api.pools.list.path, async (req, res) => {
+  app.get(api.pools.list.path, async (_req, res) => {
     const pools = await storage.getPools();
     res.status(200).json(pools);
   });
@@ -86,11 +91,18 @@ export async function registerRoutes(
         targetAmount: z.coerce.string(),
       });
       const input = bodySchema.parse(req.body);
-      const pool = await storage.createPool({ ...input, creatorId: userId });
+      const poolData: InsertPoolWithCreator = { 
+        name: input.name, 
+        description: input.description, 
+        targetAmount: input.targetAmount, 
+        currency: input.currency,
+        creatorId: userId 
+      };
+      const pool = await storage.createPool(poolData);
       res.status(201).json(pool);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json({ message: err.errors[0].message });
+        return res.status(400).json({ message: err.issues[0]?.message || "Validation error" });
       }
       res.status(500).json({ message: "Internal server error" });
     }
@@ -116,7 +128,7 @@ export async function registerRoutes(
       res.status(201).json(contribution);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(400).json({ message: err.errors[0].message });
+        return res.status(400).json({ message: err.issues[0]?.message || "Validation error" });
       }
       res.status(500).json({ message: "Internal server error" });
     }

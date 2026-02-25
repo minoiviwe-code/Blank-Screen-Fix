@@ -42,10 +42,10 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
       <aside className="hidden md:flex flex-col w-72 bg-card border-r border-border/50 shadow-xl shadow-black/5 z-20 relative">
         <div className="p-8">
           <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
               <Globe2 className="w-5 h-5 text-white" />
             </div>
-            <span className="font-display font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+            <span className="font-display font-bold text-2xl tracking-tight text-foreground">
               Ubuntu Pools
             </span>
           </Link>

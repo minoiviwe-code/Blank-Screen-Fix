@@ -24,15 +24,24 @@ const PoolDetails: React.FC = () => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-        <div>
+      <div className="h-56 rounded-2xl overflow-hidden relative">
+        <img 
+          src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=1200" 
+          alt={pool.name}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+        <div className="absolute bottom-6 left-6 right-6">
           <div className="flex items-center gap-3 mb-2">
             <Badge variant="secondary">{pool.currency}</Badge>
-            <Badge variant="outline">ID: {pool.id}</Badge>
+            <Badge variant="outline" className="text-white border-white/30">ID: {pool.id}</Badge>
           </div>
-          <h1 className="text-4xl font-display font-bold mb-2">{pool.name}</h1>
-          <p className="text-muted-foreground max-w-2xl text-lg">{pool.description}</p>
+          <h1 className="text-4xl font-display font-bold text-white mb-2">{pool.name}</h1>
+          <p className="text-white/80 max-w-2xl text-lg">{pool.description}</p>
         </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
         <div className="flex gap-3">
           <Link href={`/agreement/${pool.id}`}>
             <Button variant="outline" className="w-full md:w-auto">View Agreement</Button>
@@ -65,10 +74,8 @@ const PoolDetails: React.FC = () => {
               initial={{ width: 0 }} 
               animate={{ width: `${progress}%` }} 
               transition={{ duration: 1, ease: "easeOut" }}
-              className="h-full bg-gradient-to-r from-primary to-orange-400 rounded-full relative"
-            >
-              <div className="absolute inset-0 bg-white/20 w-full animate-pulse" />
-            </motion.div>
+              className="h-full bg-primary rounded-full"
+            />
           </div>
           <p className="text-right text-sm font-semibold text-primary mt-2">{progress.toFixed(1)}% Funded</p>
         </Card>

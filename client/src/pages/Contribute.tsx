@@ -22,11 +22,7 @@ const Contribute: React.FC = () => {
     createContribution.mutate({
       poolId,
       amount,
-      userId: 1, // Handled by backend via session, but schema requires it. Assuming backend overwrites or we provide placeholder. 
-                 // Note: If backend expects it based on schema, we pass it. The routes_manifest input schema requires userId.
-                 // Actually, realistic backend uses `req.user.id`. Let's pass 0, backend should ignore.
-                 // Wait, insertContributionSchema requires userId if not omitted. Let's pass a dummy or get from useUser.
-      userId: 1 
+      userId: 1,
     }, {
       onSuccess: () => {
         setLocation(`/pool/${poolId}`);
@@ -37,7 +33,7 @@ const Contribute: React.FC = () => {
   return (
     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-xl mx-auto py-12">
       <Card className="p-8 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary to-orange-400" />
+        <div className="absolute top-0 left-0 w-full h-2 bg-primary" />
         
         <div className="text-center mb-8 pt-4">
           <h1 className="text-3xl font-display font-bold">Contribute</h1>
